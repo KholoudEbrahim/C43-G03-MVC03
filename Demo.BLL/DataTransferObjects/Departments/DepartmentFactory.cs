@@ -52,6 +52,13 @@ namespace Demo.BLL.DataTransferObjects.Departments
             Description = departmentRequest.Description,
             Code = departmentRequest.Code,
         };
+        public static DepartmentUpdateRequest ToRequest(this DepartmentDetailsResponse department) => new() { 
+                  Id = department.Id,
+                  Name = department.Name,
+              Description = department.Description,
+            CreatedOn = (department.CreatedOn),
+              Code = department.Code,
+        };
 
     }
 }
