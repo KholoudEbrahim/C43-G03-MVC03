@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Demo.DAL.Repositories
 {
-    public interface IGenericRepository<TEntity>
+    public interface IGenericRepository<TEntity> where TEntity : BaseEntity
     {
         int Add(TEntity entity);
         int Delete(TEntity entity);

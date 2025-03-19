@@ -1,5 +1,6 @@
 using Demo.BLL.Services;
 using Demo.DAL.Data.Context;
+using Demo.DAL.Models;
 using Demo.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,10 +22,15 @@ namespace Demo.Presentation
                 options.UseSqlServer(connectionString);
             });
 
-            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 
 
+            builder.Services.AddScoped<IGenericRepository<Department>, GenericRepository<Department>>();
+
+            builder.Services.AddScoped<IGenericRepository<Employee>, GenericRepository<Employee>>();
+
+            //builder. Services.AddScoped (typeof(IGenericRepository), typeof(IGenericRepository));
 
 
 
