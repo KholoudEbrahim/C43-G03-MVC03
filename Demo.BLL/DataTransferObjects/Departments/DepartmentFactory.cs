@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Demo.BLL.DataTransferObjects
+namespace Demo.BLL.DataTransferObjects.Departments
 
 {                              //Extension Methods
     public static class DepartmentFactory
@@ -18,7 +18,7 @@ namespace Demo.BLL.DataTransferObjects
             CreatedOn = department.CreatedOn,
         };
 
-        public static DepartmentDetailsResponse ToDetailsResponse(this Department department) => new ()
+        public static DepartmentDetailsResponse ToDetailsResponse(this Department department) => new()
 
         {
 
@@ -35,14 +35,14 @@ namespace Demo.BLL.DataTransferObjects
 
         };
 
-        public static Department ToEntity(this DepartmentRequest departmentRequest)=> new() 
-          {
-           Name = departmentRequest.Name,
+        public static Department ToEntity(this DepartmentRequest departmentRequest) => new()
+        {
+            Name = departmentRequest.Name,
             Description = departmentRequest.Description,
-            Code =departmentRequest.Code,
-          CreatedOn = departmentRequest.CreatedOn,
+            Code = departmentRequest.Code,
+            CreatedOn = departmentRequest.CreatedOn,
 
-            };
+        };
 
         public static Department ToEntity(this DepartmentUpdateRequest departmentRequest) => new()
 

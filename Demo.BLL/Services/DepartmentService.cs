@@ -1,5 +1,5 @@
-﻿using Demo.BLL.DataTransferObjects;
-using Demo.DAL.Repositories;
+﻿global using Demo.BLL.DataTransferObjects.Departments;
+global using Demo.DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
