@@ -1,4 +1,4 @@
-﻿using Demo.BLL.DataTransferObjects;
+﻿using Demo.BLL.DataTransferObjects.Departments;
 
 namespace Demo.BLL.Services
 {
