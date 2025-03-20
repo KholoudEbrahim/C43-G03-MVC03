@@ -1,5 +1,6 @@
-﻿using Demo.BLL.DataTransferObjects;
-using Demo.DAL.Repositories;
+﻿global using Demo.BLL.DataTransferObjects.Departments;
+global using Demo.DAL.Repositories;
+using Demo.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Demo.BLL.Services
 {
-    public class DepartmentService(IDepartmentRepository repository) : IDepartmentService
+    public class DepartmentService(IGenericRepository<Department> repository) : IDepartmentService
     //Injection
     {
-        private readonly IDepartmentRepository _repository = repository;
+        private readonly IGenericRepository<Department> _repository = repository;
 
         //GetAll
 
