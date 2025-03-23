@@ -24,13 +24,18 @@ namespace Demo.Presentation
 
             //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IEmployeeService,EmployeeService>();
 
 
-            builder.Services.AddScoped<IGenericRepository<Department>, GenericRepository<Department>>();
 
-            builder.Services.AddScoped<IGenericRepository<Employee>, GenericRepository<Employee>>();
+            builder.Services.AddAutoMapper(typeof(BLL.AssemblyReference).Assembly);
+            //builder.Services.AddScoped(typeof(DAL.Repositories.IGenericRepository), typeof(IGenericRepository));
 
-            //builder. Services.AddScoped (typeof(IGenericRepository), typeof(IGenericRepository));
+             builder.Services.AddScoped<IGenericRepository<Department>, GenericRepository<Department>>();
+             builder.Services.AddScoped<IGenericRepository<Employee>, GenericRepository<Employee>>();
+            ///builder.Services.AddScoped(typeof(IGenericRepository), typeof(IGenericRepository));
 
 
 
