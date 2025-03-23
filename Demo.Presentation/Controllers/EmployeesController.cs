@@ -15,6 +15,8 @@ namespace Demo.Presentation.Controllers
         public IActionResult Index() //home page => All Employees
         {
             var Employees = _EmployeeService.GetAll();
+            ViewData["message"] = "Hello From view Data";
+            ViewBag.Message = new EmployeeDetailsResponse { Name = "Employee02" };
             return View(Employees); // Send Data from Action To View
         }
 
@@ -28,12 +30,16 @@ namespace Demo.Presentation.Controllers
         {
 
             if (!ModelState.IsValid) return View(request); // Server Side Validation
+            string message;
             try
             {
 
                 var result = _EmployeeService.Add(request);
 
-                if (result > 0) return RedirectToAction(nameof(Index)); //*
+                if (result > 0) message = $"Department {request.Name} Created";
+                else message = $"cant Create Department {request.Name}";
+                TempData["Message"] = message;
+                return RedirectToAction(nameof(Index));
 
                 ModelState.AddModelError(string.Empty, "Can't Create Employee Now ");
 
