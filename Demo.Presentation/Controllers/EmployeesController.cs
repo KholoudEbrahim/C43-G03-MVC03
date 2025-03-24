@@ -1,24 +1,23 @@
-﻿using Azure.Core;
-using Demo.BLL.DataTransferObjects.Departments;
+﻿
 using Demo.BLL.Services;
-using Demo.DAL.Models;
+using Demo.DAL.Models.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.Presentation.Controllers
 {
-    public class DepartmentsController(IDepartmentService departmentService,
-        IWebHostEnvironment webHostEnvironment, ILogger<DepartmentsController> logger) : Controller
+    public class EmployeesController (IEmployeeService EmployeeService,
+        IWebHostEnvironment webHostEnvironment, ILogger<EmployeesController> logger) : Controller
     {
-        private readonly IDepartmentService _departmentService = departmentService;
+        private readonly IEmployeeService _EmployeeService = EmployeeService;
         private readonly IWebHostEnvironment _env = webHostEnvironment;
-        private readonly ILogger<DepartmentsController> _logger = logger;
+        private readonly ILogger<EmployeesController> _logger = logger;
 
-        public IActionResult Index() //home page => All Departments
+        public IActionResult Index() //home page => All Employees
         {
-            var departments = _departmentService.GetAll();
+            var Employees = _EmployeeService.GetAll();
             ViewData["message"] = "Hello From view Data";
-            ViewBag.Message = new DepartmentDetailsResponse { Name = "Department02" };
-            return View(departments); // Send Data from Action To View
+            ViewBag.Message = new EmployeeDetailsResponse { Name = "Employee02" };
+            return View(Employees); // Send Data from Action To View
         }
 
         #region Create
@@ -27,8 +26,7 @@ namespace Demo.Presentation.Controllers
         public ActionResult Create() => View();
 
         [HttpPost]
-        [ValidateAntiForgeryToken] //Action filter
-        public ActionResult Create(DepartmentRequest request)
+        public ActionResult Create(EmployeeRequest request)
         {
 
             if (!ModelState.IsValid) return View(request); // Server Side Validation
@@ -36,14 +34,14 @@ namespace Demo.Presentation.Controllers
             try
             {
 
-                var result = _departmentService.Add(request);
+                var result = _EmployeeService.Add(request);
 
                 if (result > 0) message = $"Department {request.Name} Created";
                 else message = $"cant Create Department {request.Name}";
                 TempData["Message"] = message;
                 return RedirectToAction(nameof(Index));
 
-                ModelState.AddModelError(string.Empty, "Can't Create Department Now ");
+                ModelState.AddModelError(string.Empty, "Can't Create Employee Now ");
 
                 return View(request);
             }
@@ -69,11 +67,11 @@ namespace Demo.Presentation.Controllers
 
         {
             if (!id.HasValue) return BadRequest(); // 400
-            var department = _departmentService.GetById(id: id.Value);
+            var Employee = _EmployeeService.GetById(id: id.Value);
 
-            if (department is null) return NotFound(); // 404
+            if (Employee is null) return NotFound(); // 404
 
-            return View(department);
+            return View(Employee);
         }
         #endregion
 
@@ -83,24 +81,39 @@ namespace Demo.Presentation.Controllers
 
         {
             if (!id.HasValue) return BadRequest(); // 400
-            var department = _departmentService.GetById(id: id.Value);
+            var Employee = _EmployeeService.GetById(id: id.Value);
 
-            if (department is null) return NotFound(); // 404
+            if (Employee is null) return NotFound(); // 404
 
-            return View(department.ToRequest());
+            var employeeRequest = new EmployeeUpdateRequest
+            {
+               Id= Employee.Id,
+               Address= Employee.Address,
+               Age= Employee.Age,   
+               Email= Employee.Email,
+               HiringDate= Employee.HiringDate, 
+               IsActive= Employee.IsActive,
+               Name= Employee.Name, 
+               PhoneNumber= Employee.PhoneNumber,   
+               Salary= Employee.Salary,
+               EmployeeType = Enum.Parse<EmployeeType>(Employee.EmployeeType), // string => Enum (Employee Type)
+               Gender = Enum.Parse<Gender>(Employee.Gender)
+
+            };
+            return View();
         }
         [HttpPost]
 
-        public IActionResult Edit([FromRoute] int id, DepartmentUpdateRequest request)
+        public IActionResult Edit([FromRoute] int id, EmployeeUpdateRequest request)
         {
             if (id != request.Id) return BadRequest();
             try
             {
-                var result = _departmentService.Update(request);
+                var result = _EmployeeService.Update(request);
 
                 if (result > 0) return RedirectToAction(actionName: nameof(Index)); //*
 
-                ModelState.AddModelError(string.Empty, "Can't Update Department Now ");
+                ModelState.AddModelError(string.Empty, "Can't Update Employee Now ");
 
                 return View(request);
             }
@@ -123,11 +136,11 @@ namespace Demo.Presentation.Controllers
 
         {
             if (!id.HasValue) return BadRequest(); // 400
-            var department = _departmentService.GetById(id: id.Value);
+            var Employee = _EmployeeService.GetById(id: id.Value);
 
-            if (department is null) return NotFound(); // 404
+            if (Employee is null) return NotFound(); // 404
 
-            return View(department);
+            return View(Employee);
         }
         [HttpPost, ActionName(name: "Delete")]
 
@@ -138,11 +151,11 @@ namespace Demo.Presentation.Controllers
             try
             {
 
-                var result = _departmentService.Delete(id.Value);
-                // If Department is Created RedirectToAction Index
+                var result = _EmployeeService.Delete(id.Value);
+                // If Employee is Created RedirectToAction Index
                 if (result) return RedirectToAction(nameof(Index));
                 // else
-                //ModelState.AddModelError(string.Empty, "Can't Create Department Now");
+                //ModelState.AddModelError(string.Empty, "Can't Create Employee Now");
                 //return View(request);
                 /// Send Data TO Index Action TO Return it to Index View
 
@@ -161,7 +174,7 @@ namespace Demo.Presentation.Controllers
                 if (_env.IsProduction())
                 {
                     _logger.LogError(message: ex.Message);
-                    ModelState.AddModelError(string.Empty, "Can't Create Department Now");
+                    ModelState.AddModelError(string.Empty, "Can't Create Employee Now");
 
                 }
 
