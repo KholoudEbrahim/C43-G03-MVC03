@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,5 +46,16 @@ namespace Demo.DAL.Repositories
 
             return _context.SaveChanges();
         }
+
+        public IEnumerable<TResult> GetAll<TResult>(Expression<Func<TEntity,TResult>> selector)=>
+            _context.Set<TEntity>().AsNoTracking()
+             .Where(d=>!d.IsDeleted)
+             .Select(selector)
+             .ToList();
+
+
+        //public IQueryable<TEntity> GetAllQueryable() =>
+        //    _context.Set<TEntity>().AsNoTracking().Where(d => !d.IsDeleted);
+
     }
 }

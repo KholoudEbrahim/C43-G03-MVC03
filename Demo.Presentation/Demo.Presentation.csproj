@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Demo.BLL\Demo.BLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Employees\Partials\" />
+  </ItemGroup>
+
 </Project>
