@@ -15,7 +15,7 @@ namespace Demo.BLL.Services
         : IEmployeeService
     {
         //private readonly IGenericRepository<Employee> _unitOfWork.employeeRepository = repository;
-        private readonly IUnitOfWork unitOfWork = unitOfWork;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
 
         //GetAll
@@ -96,14 +96,16 @@ namespace Demo.BLL.Services
         public int Add(EmployeeRequest request)
         {
             var Employee = _mapper.Map<EmployeeRequest, Employee>(request);
-            return _unitOfWork.employeeRepository.Add(Employee);
+             _unitOfWork.employeeRepository.Add(Employee);
+            return _unitOfWork.SaveChanges();
         }
 
         //Update
         public int Update(EmployeeUpdateRequest request)
         {
             var Employee = _mapper.Map<EmployeeUpdateRequest, Employee>(request);
-            return _unitOfWork.employeeRepository.Update(Employee);
+            _unitOfWork.employeeRepository.Update(Employee);
+            return _unitOfWork.SaveChanges();
         }
 
         //Delete
@@ -113,7 +115,9 @@ namespace Demo.BLL.Services
             if (Employee is null) 
                 return false;
             Employee.IsDeleted = true;
-            return _unitOfWork.employeeRepository.Delete(Employee) > 0 ? true : false;
+            _unitOfWork.employeeRepository.Delete(Employee);
+              return _unitOfWork.SaveChanges() > 0 ? true : false;
+          
 
 
         }
