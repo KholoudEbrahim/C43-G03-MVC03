@@ -40,7 +40,7 @@ namespace Demo.BLL.Services
 
 
             if (string.IsNullOrWhiteSpace(SearchValue))
-            return _unitOfWork.employeeRepository.GetAll(e => new EmployeeResponse
+            return _unitOfWork.EmployeeRepository.GetAll(e => new EmployeeResponse
             {
                 Id = e.Id,
                 Age = e.Age,
@@ -55,7 +55,7 @@ namespace Demo.BLL.Services
             }, e => !e.IsDeleted ,
             e => e.Department);
 
-            return _unitOfWork.employeeRepository.GetAll(e => new EmployeeResponse
+            return _unitOfWork.EmployeeRepository.GetAll(e => new EmployeeResponse
             {
                 Id = e.Id,
                 Age = e.Age,
@@ -81,7 +81,7 @@ namespace Demo.BLL.Services
         //Get
         public EmployeeDetailsResponse? GetById(int id)
         {
-            var Employee = _unitOfWork.employeeRepository.GetById(id);
+            var Employee = _unitOfWork.EmployeeRepository.GetById(id);
 
 
             //Manual Mapping
@@ -96,7 +96,7 @@ namespace Demo.BLL.Services
         public int Add(EmployeeRequest request)
         {
             var Employee = _mapper.Map<EmployeeRequest, Employee>(request);
-             _unitOfWork.employeeRepository.Add(Employee);
+             _unitOfWork.EmployeeRepository.Add(Employee);
             return _unitOfWork.SaveChanges();
         }
 
@@ -104,18 +104,18 @@ namespace Demo.BLL.Services
         public int Update(EmployeeUpdateRequest request)
         {
             var Employee = _mapper.Map<EmployeeUpdateRequest, Employee>(request);
-            _unitOfWork.employeeRepository.Update(Employee);
+            _unitOfWork.EmployeeRepository.Update(Employee);
             return _unitOfWork.SaveChanges();
         }
 
         //Delete
         public bool Delete(int id)
         {
-            var Employee = _unitOfWork.employeeRepository.GetById(id);
+            var Employee = _unitOfWork.EmployeeRepository.GetById(id);
             if (Employee is null) 
                 return false;
             Employee.IsDeleted = true;
-            _unitOfWork.employeeRepository.Delete(Employee);
+            _unitOfWork.EmployeeRepository.Delete(Employee);
               return _unitOfWork.SaveChanges() > 0 ? true : false;
           
 
