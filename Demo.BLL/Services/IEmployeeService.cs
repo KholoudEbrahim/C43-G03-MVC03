@@ -1,5 +1,6 @@
 ﻿using Demo.BLL.DataTransferObjects.Employees;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace Demo.BLL.Services
     {
         int Add(EmployeeRequest request);
         bool Delete(int id);
-        IEnumerable<EmployeeResponse> GetAll();
+        IEnumerable<EmployeeResponse> GetAll(string? SearchValue);
         EmployeeDetailsResponse? GetById(int id);
         int Update(EmployeeUpdateRequest request);
     }

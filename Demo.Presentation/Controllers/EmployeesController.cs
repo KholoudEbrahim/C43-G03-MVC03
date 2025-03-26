@@ -2,6 +2,7 @@
 using Demo.BLL.Services;
 using Demo.DAL.Models.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Demo.Presentation.Controllers
 {
@@ -12,9 +13,9 @@ namespace Demo.Presentation.Controllers
         private readonly IWebHostEnvironment _env = webHostEnvironment;
         private readonly ILogger<EmployeesController> _logger = logger;
 
-        public IActionResult Index() //home page => All Employees
+        public IActionResult Index(string? SearchValue ) //home page => All Employees
         {
-            var Employees = _EmployeeService.GetAll();
+            var Employees = _EmployeeService.GetAll(SearchValue);
             ViewData["message"] = "Hello From view Data";
             ViewBag.Message = new EmployeeDetailsResponse { Name = "Employee02" };
             return View(Employees); // Send Data from Action To View
@@ -23,8 +24,17 @@ namespace Demo.Presentation.Controllers
         #region Create
 
         [HttpGet]
-        public ActionResult Create() => View();
+        public ActionResult Create([FromServices] IDepartmentService departmentService)
 
+        {
+            var departments = departmentService.GetAll();
+            var items = new SelectList(departments,
+                nameof(DepartmentResponse.Id)
+                , nameof(DepartmentResponse.Name));
+
+            ViewBag.Departments= items;
+           return View();
+        }
         [HttpPost]
         public ActionResult Create(EmployeeRequest request)
         {
@@ -77,7 +87,7 @@ namespace Demo.Presentation.Controllers
 
         #region Edit
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int? id, [FromServices] IDepartmentService departmentService)
 
         {
             if (!id.HasValue) return BadRequest(); // 400
@@ -100,6 +110,12 @@ namespace Demo.Presentation.Controllers
                Gender = Enum.Parse<Gender>(Employee.Gender)
 
             };
+            var departments = departmentService.GetAll();
+            var items = new SelectList(departments,
+                nameof(DepartmentResponse.Id)
+                , nameof(DepartmentResponse.Name));
+
+            ViewBag.Departments = items;
             return View();
         }
         [HttpPost]

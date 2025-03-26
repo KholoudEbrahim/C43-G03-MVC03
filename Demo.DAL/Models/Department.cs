@@ -12,5 +12,7 @@ namespace Demo.DAL.Models
         public string? Description { get; set; }
         public string Code { get; set; } = null!;
 
+        public ICollection<Employee> Employees { get; set; } = [];
+
     }
 }
