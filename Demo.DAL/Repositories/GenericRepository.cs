@@ -24,34 +24,27 @@ namespace Demo.DAL.Repositories
             _context.Set<TEntity>().AsNoTracking().Where(d => !d.IsDeleted).ToList();
 
         //Add
-        public int Add(TEntity entity)
-        {
-            _context.Set<TEntity>().Add(entity);
-            return _context.SaveChanges();
-        }
+        public void Add(TEntity entity) => _context.Set<TEntity>().Add(entity);
 
         // Update
 
-        public int Update(TEntity entity)
-        {
-            _context.Set<TEntity>().Update(entity);
-            return _context.SaveChanges();
-        }
+        public void Update(TEntity entity) => _context.Set<TEntity>().Update(entity);
         // Delete
-        public int Delete(TEntity entity)
+        public void Delete(TEntity entity) => _context.Set<TEntity>().Remove(entity);
 
+        public IEnumerable<TResult> GetAll<TResult>(Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includes)
         {
-
-            _context.Set<TEntity>().Remove(entity);
-
-            return _context.SaveChanges();
+            IQueryable<TEntity> query = _context.Set <TEntity> ();
+            foreach (var include in includes)
+                query.Include(include);
+            return query
+            .AsNoTracking()
+            .Where(e => !e.IsDeleted)
+            .Select(selector)
+            .ToList();
         }
-
-        public IEnumerable<TResult> GetAll<TResult>(Expression<Func<TEntity,TResult>> selector)=>
-            _context.Set<TEntity>().AsNoTracking()
-             .Where(d=>!d.IsDeleted)
-             .Select(selector)
-             .ToList();
 
 
         //public IQueryable<TEntity> GetAllQueryable() =>

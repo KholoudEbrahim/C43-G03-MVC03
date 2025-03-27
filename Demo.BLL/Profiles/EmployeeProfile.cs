@@ -15,9 +15,14 @@ namespace Demo.BLL.Profiles
             // Source => Dist
 
 
-            CreateMap<Employee, EmployeeDetailsResponse>();
+            CreateMap<Employee, EmployeeDetailsResponse>()
+                .ForMember(d => d.Department,
+                options => options.MapFrom(s => s.Department.Name));
+            
+            CreateMap<Employee, EmployeeResponse>()
+                .ForMember(d => d.Department,
+                options => options.MapFrom(s => s.Department.Name));
 
-            CreateMap<Employee, EmployeeResponse>();
 
             CreateMap<EmployeeRequest, Employee>();
 

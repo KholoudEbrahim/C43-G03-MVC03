@@ -9,16 +9,17 @@ using System.Threading.Tasks;
 
 namespace Demo.BLL.Services
 {
-    public class DepartmentService(IGenericRepository<Department> repository) : IDepartmentService
+    public class DepartmentService(IUnitOfWork unitOfWork) : IDepartmentService
     //Injection
     {
-        private readonly IGenericRepository<Department> _repository = repository;
+      //  private readonly IGeneric__unitOfWork.Departments<Department> ___unitOfWork.Departments = __unitOfWork.Departments;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         //GetAll
 
         public IEnumerable<DepartmentResponse> GetAll()
         {
-            var departments = _repository.GetAll();
+            var departments = _unitOfWork.DepartmentRepository.GetAll();
 
             return departments.Select(department => department.ToResponse());
         }
@@ -27,7 +28,7 @@ namespace Demo.BLL.Services
         //Get
         public DepartmentDetailsResponse? GetById(int id)
         {
-            var department = _repository.GetById(id);
+            var department = _unitOfWork.DepartmentRepository.GetById(id);
 
 
             //Manual Mapping
@@ -42,22 +43,23 @@ namespace Demo.BLL.Services
         public int Add(DepartmentRequest request)
         {
             var department = request.ToEntity();
-            return _repository.Add(department);
+            return _unitOfWork.SaveChanges();
         }
 
         //Update
         public int Update(DepartmentUpdateRequest request)
         {
             var department = request.ToEntity();
-            return _repository.Update(department);
+            return _unitOfWork.SaveChanges();
         }
 
         //Delete
         public bool Delete(int id)
         {
-            var department = _repository.GetById(id);
+            var department = _unitOfWork.DepartmentRepository.GetById(id);
             if (department is null) return false;
-            return _repository.Delete(department) > 0 ? true : false;
+            _unitOfWork.DepartmentRepository.Delete(department);
+            return _unitOfWork.SaveChanges() > 0 ? true : false;
 
 
         }

@@ -9,13 +9,15 @@ namespace Demo.DAL.Repositories
 {
     public interface IGenericRepository<TEntity> where TEntity : BaseEntity
     {
-        int Add(TEntity entity);
-        int Delete(TEntity entity);
+       void Add(TEntity entity);
+       void Delete(TEntity entity);
         IEnumerable<TEntity> GetAll(bool withTracking = false);
-        IEnumerable<TResult> GetAll<TResult>(Expression<Func<TEntity, TResult>> selector);
+        IEnumerable<TResult> GetAll<TResult>(Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity,bool>> predicate,
+           params Expression<Func<TEntity, object >>[] includes);
 
         //  IQueryable<TEntity> GetAllQueryable();
         TEntity? GetById(int id);
-        int Update(TEntity entity);
+        void Update(TEntity entity);
     }
 }
