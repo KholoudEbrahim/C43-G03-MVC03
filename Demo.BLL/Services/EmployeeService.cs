@@ -1,6 +1,7 @@
 ﻿global using AutoMapper;
 global using Demo.BLL.DataTransferObjects.Employees;
 using Demo.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,56 +20,39 @@ namespace Demo.BLL.Services
         private readonly IMapper _mapper = mapper;
 
         //GetAll
-
+        ///var Employees = _unitOfWork.employeeRepository.GetAll();    
+        ///return _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeResponse>>(Employees)
+        ///Filtration => Remote
+        /// Projection => Remote
+        ///var employees = _unitOfWork.employeeRepository.GetAllQueryable().Select(e => new EmployeeResponse
+        ///{
+        ///    Id = e.Id,
+        ///    Age = e.Age,
+        ///    Email = e.Email,
+        ///    EmployeeType = e.EmployeeType.ToString(),
+        ///    Gender = e.Gender.ToString(),
+        ///    IsActive = e.IsActive,
+        ///    Name = e.Name,
+        ///    Salary = e.Salary
+        ///});
         public IEnumerable<EmployeeResponse> GetAll(string? SearchValue)
         {
-            ///var Employees = _unitOfWork.employeeRepository.GetAll();    
-            ///return _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeResponse>>(Employees)
-            ///Filtration => Remote
-            /// Projection => Remote
-            ///var employees = _unitOfWork.employeeRepository.GetAllQueryable().Select(e => new EmployeeResponse
-            ///{
-            ///    Id = e.Id,
-            ///    Age = e.Age,
-            ///    Email = e.Email,
-            ///    EmployeeType = e.EmployeeType.ToString(),
-            ///    Gender = e.Gender.ToString(),
-            ///    IsActive = e.IsActive,
-            ///    Name = e.Name,
-            ///    Salary = e.Salary
-            ///});
+            return _unitOfWork.EmployeeRepository
+      .GetAllQueryable()
+      .Where(e => !e.IsDeleted && (string.IsNullOrEmpty(SearchValue) || e.Name.Contains(SearchValue)))
+      .Select(e => new EmployeeResponse
+      {
+          Id = e.Id,
+          Age = e.Age,
+          Email = e.Email,
+          EmployeeType = e.EmployeeType.ToString(),
+          Gender = e.Gender.ToString(),
+          IsActive = e.IsActive,
+          Name = e.Name,
+          Salary = e.Salary,
+          Department = e.Department.Name
+      }).ToList();
 
-
-            if (string.IsNullOrWhiteSpace(SearchValue))
-            return _unitOfWork.EmployeeRepository.GetAll(e => new EmployeeResponse
-            {
-                Id = e.Id,
-                Age = e.Age,
-                Email = e.Email,
-                EmployeeType = e.EmployeeType.ToString(),
-                Gender = e.Gender.ToString(),
-                IsActive = e.IsActive,
-                Name = e.Name,
-                Salary = e.Salary,
-                Department = e.Department.Name
-
-            }, e => !e.IsDeleted ,
-            e => e.Department);
-
-            return _unitOfWork.EmployeeRepository.GetAll(e => new EmployeeResponse
-            {
-                Id = e.Id,
-                Age = e.Age,
-                Email = e.Email,
-                EmployeeType = e.EmployeeType.ToString(),
-                Gender = e.Gender.ToString(),
-                IsActive = e.IsActive,
-                Name = e.Name,
-                Salary = e.Salary,
-                Department = e.Department.Name
-
-            }, e => !e.IsDeleted && e.Name.ToLower().Contains(SearchValue.ToLower()),
-            e => e.Department);
 
             //&& e.Name.ToLower().Contains(SearchValue.ToLower())
 

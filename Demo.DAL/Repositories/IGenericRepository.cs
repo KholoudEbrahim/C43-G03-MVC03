@@ -16,7 +16,7 @@ namespace Demo.DAL.Repositories
             Expression<Func<TEntity,bool>> predicate,
            params Expression<Func<TEntity, object >>[] includes);
 
-        //  IQueryable<TEntity> GetAllQueryable();
+         IQueryable<TEntity> GetAllQueryable();
         TEntity? GetById(int id);
         void Update(TEntity entity);
     }

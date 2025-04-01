@@ -47,8 +47,8 @@ namespace Demo.DAL.Repositories
         }
 
 
-        //public IQueryable<TEntity> GetAllQueryable() =>
-        //    _context.Set<TEntity>().AsNoTracking().Where(d => !d.IsDeleted);
+        public IQueryable<TEntity> GetAllQueryable() =>
+            _context.Set<TEntity>().AsNoTracking().Where(d => !d.IsDeleted);
 
     }
 }
