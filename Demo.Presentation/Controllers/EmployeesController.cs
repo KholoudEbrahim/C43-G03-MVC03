@@ -1,18 +1,25 @@
 ﻿
 using Demo.BLL.Services;
 using Demo.DAL.Models.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Demo.Presentation.Controllers
 {
-    public class EmployeesController (IEmployeeService EmployeeService,
+    public class EmployeesController(IEmployeeService EmployeeService,
         IWebHostEnvironment webHostEnvironment, ILogger<EmployeesController> logger) : Controller
     {
         private readonly IEmployeeService _EmployeeService = EmployeeService;
         private readonly IWebHostEnvironment _env = webHostEnvironment;
         private readonly ILogger<EmployeesController> _logger = logger;
 
+
+
+        #region Index => Home page
+
+        [Authorize]
+        [HttpGet]
         public IActionResult Index(string? SearchValue ) //home page => All Employees
         {
             var Employees = _EmployeeService.GetAll(SearchValue);
@@ -20,7 +27,7 @@ namespace Demo.Presentation.Controllers
             ViewBag.Message = new EmployeeDetailsResponse { Name = "Employee02" };
             return View(Employees); // Send Data from Action To View
         }
-
+        #endregion
         #region Create
 
         [HttpGet]

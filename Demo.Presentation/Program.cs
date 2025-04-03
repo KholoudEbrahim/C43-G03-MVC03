@@ -49,7 +49,7 @@ namespace Demo.Presentation
 
              builder.Services.AddScoped<IGenericRepository<Department>, GenericRepository<Department>>();
              builder.Services.AddScoped<IGenericRepository<Employee>, GenericRepository<Employee>>();
-            ///builder.Services.AddScoped(typeof(IGenericRepository), typeof(IGenericRepository));
+            //builder.Services.AddScoped(typeof(IGenericRepository), typeof(IGenericRepository));
 
 
 
@@ -68,7 +68,8 @@ namespace Demo.Presentation
 
             app.UseRouting();
 
-          //  app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
