@@ -1,5 +1,4 @@
-﻿global using AutoMapper;
-global using Demo.BLL.DataTransferObjects.Employees;
+﻿
 using Demo.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,12 +11,13 @@ using System.Threading.Tasks;
 namespace Demo.BLL.Services
 {
     public class EmployeeService(IUnitOfWork unitOfWork
-        , IMapper mapper)
+        , IMapper mapper, IAttachmentService attachmentService)
         : IEmployeeService
     {
         //private readonly IGenericRepository<Employee> _unitOfWork.employeeRepository = repository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
+        private readonly IAttachmentService _attachmentService = attachmentService;
 
         //GetAll
         ///var Employees = _unitOfWork.employeeRepository.GetAll();    
@@ -50,7 +50,9 @@ namespace Demo.BLL.Services
           IsActive = e.IsActive,
           Name = e.Name,
           Salary = e.Salary,
-          Department = e.Department.Name
+          Department = e.Department.Name,
+          Image = e.ImageName
+
       }).ToList();
 
 
@@ -80,8 +82,16 @@ namespace Demo.BLL.Services
         public int Add(EmployeeRequest request)
         {
             var Employee = _mapper.Map<EmployeeRequest, Employee>(request);
+
+            if (request.Image is not null)
+                Employee.ImageName =  _attachmentService.Upload(request.Image,"Imgs");
              _unitOfWork.EmployeeRepository.Add(Employee);
+           
+
+
             return _unitOfWork.SaveChanges();
+
+
         }
 
         //Update

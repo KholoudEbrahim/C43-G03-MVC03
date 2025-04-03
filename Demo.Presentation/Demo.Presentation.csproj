@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Employees\Partials\" />
+    <Folder Include="wwwroot\Files\Imgs\" />
   </ItemGroup>
 
 </Project>
