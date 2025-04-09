@@ -1,7 +1,10 @@
 using Demo.BLL.Services;
+using Demo.BLL.Services.AttachmentService;
 using Demo.DAL.Data.Context;
 using Demo.DAL.Models;
 using Demo.DAL.Repositories;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Demo.Presentation
@@ -22,21 +25,31 @@ namespace Demo.Presentation
                 options.UseSqlServer(connectionString);
             });
 
-            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<IDepartmentService, DepartmentService>();
             builder.Services.AddScoped<IEmployeeService,EmployeeService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            builder.Services.AddScoped<Func<IDepartmentRepository>>(provider => 
+            () => provider.GetRequiredService<IDepartmentRepository>());
 
+            builder.Services.AddScoped<Func<IEmployeeRepository>>(provider =>
+            () => provider.GetRequiredService<IEmployeeRepository>());
+
+            builder.Services.AddTransient<IAttachmentService, AttachmentService>();
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddAutoMapper(typeof(BLL.AssemblyReference).Assembly);
+
             //builder.Services.AddScoped(typeof(DAL.Repositories.IGenericRepository), typeof(IGenericRepository));
 
              builder.Services.AddScoped<IGenericRepository<Department>, GenericRepository<Department>>();
              builder.Services.AddScoped<IGenericRepository<Employee>, GenericRepository<Employee>>();
-            ///builder.Services.AddScoped(typeof(IGenericRepository), typeof(IGenericRepository));
+            //builder.Services.AddScoped(typeof(IGenericRepository), typeof(IGenericRepository));
 
 
 
@@ -55,7 +68,8 @@ namespace Demo.Presentation
 
             app.UseRouting();
 
-          //  app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
